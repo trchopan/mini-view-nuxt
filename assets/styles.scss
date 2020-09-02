@@ -1,0 +1,14 @@
+// Your variable overrides
+$body-bg: #303030;
+$body-color: #d4d4bd;
+@import '../node_modules/bootstrap/scss/bootstrap';
+
+html {
+  font-family: 'Play', sans-serif;
+  background: black;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
