@@ -9,10 +9,14 @@
           Welcome, <span class="user-name">{{ authUser.email }}</span>
         </h1>
         <h1 v-else>
-          Please login in <router-link to="/">Home screen</router-link>
+          You are viewing shared screen with other users. Please login in
+          <router-link style="text-decoration: underline" to="/">
+            Home screen
+          </router-link>
+          to have your own view.
         </h1>
       </div>
-      <div v-if="authUser" class="view">
+      <div class="view">
         <div class="youtube-player">
           <youtube
             ref="youtube"
@@ -58,10 +62,6 @@ export default Vue.extend({
     },
   },
   mounted() {
-    if (!this.authUser) {
-      this.$router.replace('/');
-      return;
-    }
     setInterval(() => {
       const now = new Date();
       const date = this.addZero(now.getDate());
@@ -115,8 +115,8 @@ export default Vue.extend({
       this.ytCommandRef.set(null);
     },
     makeDbRef(refStr) {
-      if (!this.authUser) return {on: () => {}};
-      return this.$fireDb.ref(`${this.authUser.uid}/${refStr}`);
+      const uid = (this.authUser && this.authUser.uid) || 'test';
+      return this.$fireDb.ref(`${uid}/${refStr}`);
     },
     addZero(x) {
       return x >= 10 ? `${x}` : `0${x}`;

@@ -32,6 +32,12 @@
                 Sign Out
               </button>
             </div>
+            <div v-if="!authUser">
+              <p>
+                Or you can try below. But note that other user can interact with
+                the view the same as you.
+              </p>
+            </div>
             <div class="navigator">
               <router-link to="/view">View</router-link>
               <router-link to="/controller">Controller</router-link>

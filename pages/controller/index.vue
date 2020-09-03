@@ -9,10 +9,14 @@
           Welcome, <span class="user-name">{{ authUser.email }}</span>
         </h1>
         <h1 v-else>
-          Please login in <router-link to="/">Home screen</router-link>
+          You are controlling shared screen with other users. Please login in
+          <router-link style="text-decoration: underline" to="/">
+            Home screen
+          </router-link>
+          to have your own view.
         </h1>
       </div>
-      <div v-if="authUser" class="controller">
+      <div class="controller">
         <div class="yt-cover">
           <img id="yt-cover" :src="ytImgSrc" alt="" />
         </div>
@@ -107,10 +111,6 @@ export default Vue.extend({
     },
   },
   mounted() {
-    if (!this.authUser) {
-      this.$router.replace('/');
-      return;
-    }
     this.videoIDRef = this.makeDbRef('youtube/videoID');
     this.ytCommandRef = this.makeDbRef('youtube/command');
     this.layoutRef = this.makeDbRef('layout');
@@ -122,7 +122,8 @@ export default Vue.extend({
   },
   methods: {
     makeDbRef(refStr) {
-      return this.$fireDb.ref(`${this.authUser.uid}/${refStr}`);
+      const uid = (this.authUser && this.authUser.uid) || 'test';
+      return this.$fireDb.ref(`${uid}/${refStr}`);
     },
     getYoutubeID(str) {
       // eslint-disable-next-line
