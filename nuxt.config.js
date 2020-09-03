@@ -1,4 +1,4 @@
-import firebaseConf from 'firebase-conf.js';
+import firebaseConf from './firebase-conf.js';
 import {title, meta, link, script} from './headers.js';
 
 export default {
@@ -10,7 +10,7 @@ export default {
     link,
     script,
   },
-  css: ['~/assets/styles.scss'],
+  css: ['normalize.css/normalize.css', '~/assets/styles.scss'],
   plugins: ['~/plugins/youtube.js'],
   components: true,
   buildModules: ['@nuxtjs/eslint-module'],

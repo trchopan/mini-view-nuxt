@@ -1,14 +1,49 @@
-// Your variable overrides
-$body-bg: #303030;
-$body-color: #d4d4bd;
-@import '../node_modules/bootstrap/scss/bootstrap';
+@import 'variables.scss';
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  margin: 0;
+}
 
 html {
   font-family: 'Play', sans-serif;
-  background: black;
+  font-family: 'Play', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
+  word-spacing: 1px;
+  color: map-get($colors, 'text');
+  background-color: map-get($colors, 'background');
 }
 
 a {
   text-decoration: none;
   color: inherit;
+}
+
+button {
+  border: solid 1px map-get($colors, 'text');
+  border-radius: 2px;
+  padding: 0.5rem;
+  &.btn-primary {
+    color: map-get($colors, 'text');
+    background: map-get($colors, 'primary');
+    border: solid 1px map-get($colors, 'accent');
+  }
+  &.btn-secondary {
+    color: map-get($colors, 'primary');
+    background: map-get($colors, 'secondary');
+    border: solid 1px map-get($colors, 'primary');
+  }
+  &.btn-accent {
+    color: map-get($colors, 'text');
+    background: map-get($colors, 'accent');
+    border: solid 1px map-get($colors, 'text');
+  }
+  &.btn-hightlight {
+    color: map-get($colors, 'text');
+    background: map-get($colors, 'hightlight');
+    border: solid 1px map-get($colors, 'text');
+  }
 }

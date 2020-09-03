@@ -1,0 +1,76 @@
+// View breakpoint
+$breakpoint-xl: 1441px;
+$breakpoint-lg: 1024px;
+$breakpoint-md: 768px;
+$breakpoint-sm: 576px;
+$breakpoint-xs: 320px;
+
+$colors: (
+  'primary': #861f11,
+  'accent': #aa612e,
+  'hightlight': #85a28b,
+  'hightlight2': #e4bd62,
+  'shade': #63322d,
+  'fade': #442d25,
+  'text': #d4d4bd,
+  'darker': #1e1e1e,
+  'background': #303030,
+);
+
+$spacings: (
+  '1': 0.25rem,
+  '2': 0.5rem,
+  '3': 0.75rem,
+  '4': 1rem,
+  '5': 1.5rem,
+);
+
+@each $i in $spacings {
+  .ma-#{nth($i, 1)} {
+    margin: nth($i, 2);
+  }
+  .mx-#{nth($i, 1)} {
+    margin-left: nth($i, 2);
+    margin-right: nth($i, 2);
+  }
+  .my-#{nth($i, 1)} {
+    margin-top: nth($i, 2);
+    margin-bottom: nth($i, 2);
+  }
+  .mt-#{nth($i, 1)} {
+    margin-top: nth($i, 2);
+  }
+  .mr-#{nth($i, 1)} {
+    margin-right: nth($i, 2);
+  }
+  .mb-#{nth($i, 1)} {
+    margin-bottom: nth($i, 2);
+  }
+  .ml-#{nth($i, 1)} {
+    margin-left: nth($i, 2);
+  }
+
+  .pa-#{nth($i, 1)} {
+    padding: nth($i, 2);
+  }
+  .px-#{nth($i, 1)} {
+    padding-left: nth($i, 2);
+    padding-right: nth($i, 2);
+  }
+  .py-#{nth($i, 1)} {
+    padding-top: nth($i, 2);
+    padding-bottom: nth($i, 2);
+  }
+  .pt-#{nth($i, 1)} {
+    padding-top: nth($i, 2);
+  }
+  .pr-#{nth($i, 1)} {
+    padding-right: nth($i, 2);
+  }
+  .pb-#{nth($i, 1)} {
+    padding-bottom: nth($i, 2);
+  }
+  .pl-#{nth($i, 1)} {
+    padding-left: nth($i, 2);
+  }
+}

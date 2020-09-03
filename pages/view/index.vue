@@ -1,6 +1,6 @@
 <template>
   <client-only>
-    <div class="container" :class="layout" v-if="showLayout">
+    <div v-if="showLayout" class="container" :class="layout">
       <router-link tag="button" class="back-arrow" type="button" to="/">
         &lt;
       </router-link>
@@ -19,7 +19,6 @@
             resize
             fit-parent
             :video-id="videoID"
-            @playing="playing"
           ></youtube>
         </div>
         <div class="clock-container">
@@ -41,7 +40,6 @@ import {debounce} from 'lodash';
 export default Vue.extend({
   data() {
     return {
-      player: null,
       videoID: '',
       layout: '',
       dateStr: '',
@@ -53,6 +51,11 @@ export default Vue.extend({
     ...mapState({
       authUser: state => state.authUser,
     }),
+  },
+  watch: {
+    layout(val, oldVal) {
+      this.debouncedLayout();
+    },
   },
   mounted() {
     if (!this.authUser) {
@@ -76,16 +79,40 @@ export default Vue.extend({
     this.debouncedLayout = debounce(() => (this.showLayout = true), 500);
 
     this.videoIDRef.on('value', this.handleVideoID);
+    this.ytCommandRef.on('value', this.handleYTCommand);
     this.layoutRef.on('value', this.handleLayout);
   },
   beforeDestroy() {
     this.videoIDRef.off('value', this.handleVideoID);
+    this.ytCommandRef.off('value', this.handleYTCommand);
     this.layoutRef.off('value', this.handleLayout);
   },
   methods: {
-    playing() {
-      // eslint-disable-next-line
-      console.log('\\o/ we are watching!!!');
+    async handleYTCommand(snapshot) {
+      const command = snapshot.val();
+      if (!command) return;
+
+      const cmds = command.split('-');
+      const player = this.$refs.youtube.player;
+      if (cmds.length === 1) {
+        switch (cmds[0]) {
+          case 'play':
+            player.playVideo();
+            break;
+          case 'pause':
+            player.pauseVideo();
+            break;
+        }
+      } else {
+        const curTime = await player.getCurrentTime();
+        const seekTime = parseInt(cmds[1]);
+        const seekTo =
+          cmds[0] === 'back' ? curTime - seekTime : curTime + seekTime;
+        // eslint-disable-next-line
+        console.log('>>> seekTo', seekTo);
+        player.seekTo(seekTo);
+      }
+      this.ytCommandRef.set(null);
     },
     makeDbRef(refStr) {
       if (!this.authUser) return {on: () => {}};
@@ -101,11 +128,6 @@ export default Vue.extend({
       this.showLayout = false;
       const layout = snapshot.val();
       this.layout = layout || 'layout-1';
-    },
-  },
-  watch: {
-    layout(val, oldVal) {
-      this.debouncedLayout();
     },
   },
 });

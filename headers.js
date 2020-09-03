@@ -50,7 +50,7 @@ export const meta = [
   {name: 'author', content: author},
   // {
   //   name: 'copyright',
-  //   content: 'Copyright (c) 2019 Qtee2 Pte Ltd., All rights reserved.',
+  //   content: 'Copyright (c) 2019 Chop Tr, All rights reserved.',
   // },
   ...nameContentMapper(og),
   ...nameContentMapper(twitter),

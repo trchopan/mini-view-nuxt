@@ -4,7 +4,7 @@
       <div class="content">
         <div>
           <h1 class="title my-3">Mini View</h1>
-          <h6 class="subtitle my-3 mb-5">by Chop Tr</h6>
+          <h6 class="subtitle my-3">by Chop Tr</h6>
           <div class="my-3">
             <div class="greeting">
               <div v-if="authUser">
@@ -14,27 +14,25 @@
                 <h3>Please login</h3>
               </div>
             </div>
-            <div class="sign-in-container">
+            <div class="sign-in-container my-5">
               <button
                 v-if="!authUser"
-                id="sign-in-btn"
                 type="button"
-                class="btn btn-dark"
+                class="btn-primary"
                 @click="signIn"
               >
                 Sign In
               </button>
               <button
                 v-else
-                id="sign-out-btn"
                 type="button"
-                class="btn btn-dark"
+                class="btn-secondary"
                 @click="signOut"
               >
                 Sign Out
               </button>
             </div>
-            <div class="navigator my-3">
+            <div class="navigator">
               <router-link to="/view">View</router-link>
               <router-link to="/controller">Controller</router-link>
             </div>
@@ -85,12 +83,10 @@ export default Vue.extend({
     justify-content: center;
     align-items: center;
     .sign-in-container {
-      button {
-        margin: 1rem;
-      }
     }
     .navigator {
       a {
+        display: inline-block;
         border: solid 1px;
         border-radius: 2px;
         padding: 0.5rem;
