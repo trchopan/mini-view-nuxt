@@ -17,6 +17,19 @@ $colors: (
   'background': #303030,
 );
 
+@each $i in $colors {
+  .text-#{nth($i, 1)} {
+    color: nth($i, 2);
+  }
+  .bg-#{nth($i, 1)} {
+    background-color: nth($i, 2);
+  }
+}
+
+.text-underline {
+  text-decoration: underline;
+}
+
 $spacings: (
   '1': 0.25rem,
   '2': 0.5rem,

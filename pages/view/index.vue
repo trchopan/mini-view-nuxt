@@ -10,9 +10,7 @@
         </h1>
         <h1 v-else>
           You are viewing shared screen with other users. Please login in
-          <router-link style="text-decoration: underline" to="/">
-            Home screen
-          </router-link>
+          <router-link class="text-underline" to="/">Home screen</router-link>
           to have your own view.
         </h1>
       </div>
@@ -21,7 +19,9 @@
           <youtube
             ref="youtube"
             resize
+            :resize-delay="500"
             fit-parent
+            :player-vars="playerVars"
             :video-id="videoID"
           ></youtube>
         </div>
@@ -44,11 +44,15 @@ import {debounce} from 'lodash';
 export default Vue.extend({
   data() {
     return {
+      playerVars: {
+        autoplay: 0,
+        playsinline: 1,
+      },
       videoID: '',
       layout: '',
       dateStr: '',
       timeStr: '',
-      showLayout: true,
+      showLayout: false,
     };
   },
   computed: {
@@ -76,7 +80,9 @@ export default Vue.extend({
     this.videoIDRef = this.makeDbRef('youtube/videoID');
     this.ytCommandRef = this.makeDbRef('youtube/command');
     this.layoutRef = this.makeDbRef('layout');
-    this.debouncedLayout = debounce(() => (this.showLayout = true), 500);
+    this.debouncedLayout = debounce(() => {
+      this.showLayout = true;
+    }, 500);
 
     this.videoIDRef.on('value', this.handleVideoID);
     this.ytCommandRef.on('value', this.handleYTCommand);
@@ -88,12 +94,19 @@ export default Vue.extend({
     this.layoutRef.off('value', this.handleLayout);
   },
   methods: {
+    makeDbRef(refStr) {
+      const uid = (this.authUser && this.authUser.uid) || 'test';
+      return this.$fireDb.ref(`${uid}/${refStr}`);
+    },
+    addZero(x) {
+      return x >= 10 ? `${x}` : `0${x}`;
+    },
     async handleYTCommand(snapshot) {
       const command = snapshot.val();
       if (!command) return;
 
-      const cmds = command.split('-');
       const player = this.$refs.youtube.player;
+      const cmds = command.split('-');
       if (cmds.length === 1) {
         switch (cmds[0]) {
           case 'play':
@@ -114,13 +127,6 @@ export default Vue.extend({
       }
       this.ytCommandRef.set(null);
     },
-    makeDbRef(refStr) {
-      const uid = (this.authUser && this.authUser.uid) || 'test';
-      return this.$fireDb.ref(`${uid}/${refStr}`);
-    },
-    addZero(x) {
-      return x >= 10 ? `${x}` : `0${x}`;
-    },
     handleVideoID(snapshot) {
       this.videoID = snapshot.val();
     },
@@ -134,6 +140,8 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+@import '~/assets/_variables.scss';
+
 .container {
   max-width: none;
   height: 100vh;
@@ -146,6 +154,7 @@ export default Vue.extend({
     border: none;
   }
   .greeting {
+    margin-top: 2rem;
     flex: none;
     h1 {
       text-align: center;
@@ -156,14 +165,22 @@ export default Vue.extend({
     .view {
       flex: 1;
       display: flex;
-      width: 100%;
+      width: 100vw;
+      @media (max-width: $breakpoint-sm) {
+        flex-wrap: wrap;
+      }
       .youtube-player,
       .clock-container {
+        width: 100%;
         flex-basis: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         text-align: center;
+        @media (max-width: $breakpoint-sm) {
+          flex-basis: 100%;
+          margin: auto;
+        }
       }
       .youtube-player {
       }
@@ -184,7 +201,7 @@ export default Vue.extend({
     .view {
       .youtube-player {
         position: fixed;
-        top: 0;
+        top: 1.5rem;
         right: 0;
         left: 0;
         bottom: 0;

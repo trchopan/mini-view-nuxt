@@ -10,9 +10,7 @@
         </h1>
         <h1 v-else>
           You are controlling shared screen with other users. Please login in
-          <router-link style="text-decoration: underline" to="/">
-            Home screen
-          </router-link>
+          <router-link class="text-underline" to="/">Home screen</router-link>
           to have your own view.
         </h1>
       </div>
@@ -76,6 +74,10 @@
           <button type="button" @click="setLayout('layout-2')">Layout 2</button>
         </div>
       </div>
+      <div class="ios-note text-accent">
+        On iOS user may need to be played by hand first in View. This is because
+        iOS block content auto-play to protect users from abusive ads.
+      </div>
     </div>
   </client-only>
 </template>
@@ -137,7 +139,6 @@ export default Vue.extend({
     },
     updateYoutubeID() {
       this.videoID = this.getYoutubeID(this.inputID);
-      // eslint-disable-next-line
       if (!this.videoID) {
         // TODO: Handle show error
         return;
@@ -170,6 +171,7 @@ export default Vue.extend({
   max-width: 550px;
   margin: auto;
   display: block;
+  text-align: center;
   .back-arrow {
     position: absolute;
     top: 0rem;
@@ -179,14 +181,13 @@ export default Vue.extend({
     border: none;
   }
   .greeting {
+    margin-top: 2rem;
     h1 {
-      text-align: center;
       font-size: 1.5rem;
     }
   }
   .controller {
     padding: 1rem;
-    text-align: center;
     .yt-cover {
       max-width: 300px;
       margin: auto;
@@ -204,6 +205,9 @@ export default Vue.extend({
         display: flex;
       }
     }
+  }
+  .ios-note {
+    font-size: 0.7rem;
   }
 }
 </style>
