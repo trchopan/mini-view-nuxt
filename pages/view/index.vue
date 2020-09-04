@@ -1,36 +1,25 @@
 <template>
   <client-only>
-    <div v-if="showLayout" class="container" :class="layout">
+    <div v-if="showLayout" class="container">
       <router-link tag="button" class="back-arrow" type="button" to="/">
         &lt;
       </router-link>
       <div class="greeting">
-        <h1 v-if="authUser">
-          Welcome, <span class="user-name">{{ authUser.email }}</span>
-        </h1>
-        <h1 v-else>
-          You are viewing shared screen with other users. Please login in
-          <router-link class="text-underline" to="/">Home screen</router-link>
-          to have your own view.
-        </h1>
+        <Welcome v-if="authUser" :auth-user="authUser" small />
+        <SharedView v-else small />
       </div>
-      <div class="view">
+      <div class="view" :class="layout">
         <div class="youtube-player">
-          <youtube
-            ref="youtube"
-            resize
-            :resize-delay="500"
-            fit-parent
-            :player-vars="playerVars"
-            :video-id="videoID"
-          ></youtube>
+          <YoutubePlayer />
         </div>
-        <div class="clock-container">
+        <div class="clock">
           <div>
-            <div class="date">{{ dateStr }}</div>
-            <div class="time">{{ timeStr }}</div>
+            <Clock />
           </div>
         </div>
+      </div>
+      <div v-if="authUser" class="view-2">
+        <CustomEmbed class="embed" />
       </div>
     </div>
   </client-only>
@@ -50,8 +39,6 @@ export default Vue.extend({
       },
       videoID: '',
       layout: '',
-      dateStr: '',
-      timeStr: '',
       showLayout: false,
     };
   },
@@ -66,69 +53,20 @@ export default Vue.extend({
     },
   },
   mounted() {
-    setInterval(() => {
-      const now = new Date();
-      const date = this.addZero(now.getDate());
-      const month = this.addZero(now.getMonth() + 1);
-      const year = this.addZero(now.getFullYear());
-      const hour = this.addZero(now.getHours());
-      const minute = this.addZero(now.getMinutes());
-      const second = this.addZero(now.getSeconds());
-      this.dateStr = `${date}-${month}-${year}`;
-      this.timeStr = `${hour}:${minute}:${second}`;
-    }, 1000);
-    this.videoIDRef = this.makeDbRef('youtube/videoID');
-    this.ytCommandRef = this.makeDbRef('youtube/command');
     this.layoutRef = this.makeDbRef('layout');
     this.debouncedLayout = debounce(() => {
       this.showLayout = true;
     }, 500);
 
-    this.videoIDRef.on('value', this.handleVideoID);
-    this.ytCommandRef.on('value', this.handleYTCommand);
     this.layoutRef.on('value', this.handleLayout);
   },
   beforeDestroy() {
-    this.videoIDRef.off('value', this.handleVideoID);
-    this.ytCommandRef.off('value', this.handleYTCommand);
     this.layoutRef.off('value', this.handleLayout);
   },
   methods: {
     makeDbRef(refStr) {
       const uid = (this.authUser && this.authUser.uid) || 'test';
       return this.$fireDb.ref(`${uid}/${refStr}`);
-    },
-    addZero(x) {
-      return x >= 10 ? `${x}` : `0${x}`;
-    },
-    async handleYTCommand(snapshot) {
-      const command = snapshot.val();
-      if (!command) return;
-
-      const player = this.$refs.youtube.player;
-      const cmds = command.split('-');
-      if (cmds.length === 1) {
-        switch (cmds[0]) {
-          case 'play':
-            player.playVideo();
-            break;
-          case 'pause':
-            player.pauseVideo();
-            break;
-        }
-      } else {
-        const curTime = await player.getCurrentTime();
-        const seekTime = parseInt(cmds[1]);
-        const seekTo =
-          cmds[0] === 'back' ? curTime - seekTime : curTime + seekTime;
-        // eslint-disable-next-line
-        console.log('>>> seekTo', seekTo);
-        player.seekTo(seekTo);
-      }
-      this.ytCommandRef.set(null);
-    },
-    handleVideoID(snapshot) {
-      this.videoID = snapshot.val();
     },
     handleLayout(snapshot) {
       this.showLayout = false;
@@ -154,15 +92,13 @@ export default Vue.extend({
     border: none;
   }
   .greeting {
-    margin-top: 2rem;
     flex: none;
-    h1 {
-      text-align: center;
-      font-size: 0.8rem;
+    @media (max-width: $breakpoint-sm) {
+      margin-top: 2rem;
     }
   }
-  &.layout-1 {
-    .view {
+  .view {
+    &.layout-1 {
       flex: 1;
       display: flex;
       width: 100vw;
@@ -170,7 +106,7 @@ export default Vue.extend({
         flex-wrap: wrap;
       }
       .youtube-player,
-      .clock-container {
+      .clock {
         width: 100%;
         flex-basis: 50%;
         display: flex;
@@ -182,23 +118,8 @@ export default Vue.extend({
           margin: auto;
         }
       }
-      .youtube-player {
-      }
-      .clock-container {
-        div {
-          .date {
-            color: #545454;
-            font-size: 2rem;
-          }
-          .time {
-            font-size: 5rem;
-          }
-        }
-      }
     }
-  }
-  &.layout-2 {
-    .view {
+    &.layout-2 {
       .youtube-player {
         position: fixed;
         top: 1.5rem;
@@ -207,6 +128,14 @@ export default Vue.extend({
         bottom: 0;
         background: black;
       }
+    }
+  }
+  .view-2 {
+    display: flex;
+    .embed {
+      flex-basis: 50%;
+    }
+    .live-string {
     }
   }
 }

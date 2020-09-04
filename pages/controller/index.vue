@@ -5,31 +5,40 @@
         &lt;
       </router-link>
       <div class="greeting">
-        <h1 v-if="authUser">
-          Welcome, <span class="user-name">{{ authUser.email }}</span>
-        </h1>
-        <h1 v-else>
-          You are controlling shared screen with other users. Please login in
-          <router-link class="text-underline" to="/">Home screen</router-link>
-          to have your own view.
-        </h1>
+        <Welcome v-if="authUser" :auth-user="authUser" />
+        <SharedView v-else />
       </div>
       <div class="controller">
         <div class="yt-cover">
           <img id="yt-cover" :src="ytImgSrc" alt="" />
         </div>
         <div class="input-group my-3">
-          <input
-            v-model="inputID"
-            placeholder="Youtube link"
-            class="form-control"
-          />
+          <input v-model="inputID" placeholder="Youtube link" />
           <div class="input-group-append">
             <button type="button" class="btn-primary" @click="updateYoutubeID">
               Update
             </button>
-            <button type="button" @click="pasteClipboard">Clipboard</button>
+            <button type="button" @click="youtubeClipboard">Clipboard</button>
           </div>
+        </div>
+        <div class="input-group my-3">
+          <input v-model="embed" placeholder="Embed code" />
+          <div class="input-group-append">
+            <button type="button" class="btn-primary" @click="updateEmbed">
+              Update
+            </button>
+            <button type="button" @click="embedClipboard">Clipboard</button>
+          </div>
+        </div>
+        <div class="my-3">
+          <button
+            type="button"
+            class="btn-outline-primary mb-3"
+            @click="genSecretToken"
+          >
+            Gen Secret
+          </button>
+          <p v-if="secretToken" class="text-highlight">{{ secretToken }}</p>
         </div>
         <div class="my-3">
           <button
@@ -66,7 +75,7 @@
             class="btn-hightlight"
             @click="seekVideo('forward', btn.value)"
           >
-            &gt; {{ btn.text }}
+            {{ btn.text }} &gt;
           </button>
         </div>
         <div class="my-3">
@@ -75,8 +84,8 @@
         </div>
       </div>
       <div class="ios-note text-accent">
-        On iOS user may need to be played by hand first in View. This is because
-        iOS block content auto-play to protect users from abusive ads.
+        iOS user may need to play the View first. This is because iOS block
+        content auto-play to protect users from abusive ads.
       </div>
     </div>
   </client-only>
@@ -94,6 +103,8 @@ export default Vue.extend({
     return {
       videoID: '',
       inputID: '',
+      embed: '',
+      secretToken: '',
       seeks: [
         {text: '10m', value: 10 * minute},
         {text: '5m', value: 5 * minute},
@@ -116,6 +127,8 @@ export default Vue.extend({
     this.videoIDRef = this.makeDbRef('youtube/videoID');
     this.ytCommandRef = this.makeDbRef('youtube/command');
     this.layoutRef = this.makeDbRef('layout');
+    this.embedRef = this.makeDbRef('embed');
+    this.secretRef = this.makeDbRef('secret');
 
     this.videoIDRef.on('value', this.handleVideoID);
   },
@@ -145,10 +158,21 @@ export default Vue.extend({
       }
       this.videoIDRef.set(this.videoID);
     },
-    async pasteClipboard() {
+    async youtubeClipboard() {
       try {
         const text = await navigator.clipboard.readText();
         this.inputID = text;
+      } catch (err) {
+        alert('Please allow access to clipboard');
+      }
+    },
+    updateEmbed() {
+      this.embedRef.set(this.embed);
+    },
+    async embedClipboard() {
+      try {
+        const text = await navigator.clipboard.readText();
+        this.embed = text;
       } catch (err) {
         alert('Please allow access to clipboard');
       }
@@ -161,6 +185,20 @@ export default Vue.extend({
     },
     setLayout(layout) {
       this.layoutRef.set(layout);
+    },
+    genSecretToken() {
+      this.secretToken = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+        /[xy]/g,
+        function (c) {
+          const r = (Math.random() * 16) | 0;
+          const v = c === 'x' ? r : (r & 0x3) | 0x8;
+          return v.toString(16);
+        }
+      );
+      this.secretRef.set(this.secretToken);
+      setTimeout(() => {
+        this.secretToken = '';
+      }, 5000);
     },
   },
 });
@@ -182,9 +220,6 @@ export default Vue.extend({
   }
   .greeting {
     margin-top: 2rem;
-    h1 {
-      font-size: 1.5rem;
-    }
   }
   .controller {
     padding: 1rem;

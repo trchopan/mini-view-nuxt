@@ -1,47 +1,48 @@
 <template>
   <client-only>
     <div class="container">
-      <div class="content">
-        <div>
-          <h1 class="title my-3">Mini View</h1>
-          <h6 class="subtitle my-3">by Chop Tr</h6>
-          <div class="my-3">
-            <div class="greeting">
-              <div v-if="authUser">
-                <h3>Welcome, {{ authUser.email }}</h3>
-              </div>
-              <div v-else>
-                <h3>Please login</h3>
-              </div>
+      <div class="content-wrapper">
+        <div class="content">
+          <h1 class="my-3">Mini View</h1>
+          <h6 class="my-3">by Chop Tr</h6>
+          <div class="intro my-3">
+            <p>
+              I have a spare tablet so I decided to build a View - Controller
+              system that I can play youtube video, show a clock, embed some
+              string like cpu status, etc.
+            </p>
+            <p>Enjoy!</p>
+          </div>
+          <div>
+            <div v-if="authUser">
+              <h3>Welcome, {{ authUser.email }}</h3>
             </div>
-            <div class="sign-in-container my-5">
-              <button
-                v-if="!authUser"
-                type="button"
-                class="btn-primary"
-                @click="signIn"
-              >
-                Sign In
-              </button>
-              <button
-                v-else
-                type="button"
-                class="btn-secondary"
-                @click="signOut"
-              >
-                Sign Out
-              </button>
+            <div v-else>
+              <h3>Please login</h3>
             </div>
-            <div v-if="!authUser">
-              <p>
-                Or you can try below. But note that other user can interact with
-                the view the same as you.
-              </p>
-            </div>
-            <div class="navigator">
-              <router-link to="/view">View</router-link>
-              <router-link to="/controller">Controller</router-link>
-            </div>
+          </div>
+          <div class="my-5">
+            <button
+              v-if="!authUser"
+              type="button"
+              class="btn-primary"
+              @click="signIn"
+            >
+              Sign In
+            </button>
+            <button v-else type="button" class="btn-secondary" @click="signOut">
+              Sign Out
+            </button>
+          </div>
+          <div v-if="!authUser">
+            <p>
+              Or you can try below. But note that other user can interact with
+              the view the same as you.
+            </p>
+          </div>
+          <div class="navigator">
+            <router-link to="/view">View</router-link>
+            <router-link to="/controller">Controller</router-link>
           </div>
         </div>
       </div>
@@ -76,6 +77,8 @@ export default Vue.extend({
 
 <style lang="scss">
 .container {
+  max-width: 500px;
+  padding: 0.5rem;
   margin: 0 auto;
   min-height: 100vh;
   display: flex;
@@ -83,20 +86,25 @@ export default Vue.extend({
   justify-content: center;
   align-items: center;
   text-align: center;
-  .content {
+  .content-wrapper {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    .sign-in-container {
-    }
-    .navigator {
-      a {
-        display: inline-block;
-        border: solid 1px;
-        border-radius: 2px;
-        padding: 0.5rem;
-        margin: 1rem;
+    .content {
+      .intro > p {
+        text-align: left;
+        margin-bottom: 1rem;
+        line-height: 1.5rem;
+      }
+      .navigator {
+        a {
+          display: inline-block;
+          border: solid 1px;
+          border-radius: 2px;
+          padding: 0.5rem;
+          margin: 1rem;
+        }
       }
     }
   }

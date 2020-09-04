@@ -11,7 +11,7 @@ export default {
     script,
   },
   css: ['normalize.css/normalize.css', '~/assets/styles.scss'],
-  plugins: ['~/plugins/youtube.js'],
+  plugins: [{src: '~/plugins/youtube.js', mode: 'client'}],
   components: true,
   buildModules: ['@nuxtjs/eslint-module'],
   modules: ['@nuxtjs/firebase'],

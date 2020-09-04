@@ -25,6 +25,7 @@ a {
 button {
   border: solid 1px map-get($colors, 'text');
   border-radius: 2px;
+  background: map-get($colors, 'secondary');
   padding: 0.5rem;
   &.btn-primary {
     color: map-get($colors, 'text');
@@ -45,5 +46,10 @@ button {
     color: map-get($colors, 'text');
     background: map-get($colors, 'hightlight');
     border: solid 1px map-get($colors, 'text');
+  }
+  &.btn-outline-primary{
+    color: map-get($colors, 'text');
+    background: none;
+    border: solid 2px map-get($colors, 'primary');
   }
 }
