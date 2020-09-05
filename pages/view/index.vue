@@ -83,6 +83,8 @@ export default Vue.extend({
 .container {
   max-width: none;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
   .back-arrow {
     position: absolute;
     top: 0rem;
@@ -131,11 +133,11 @@ export default Vue.extend({
     }
   }
   .view-2 {
+    flex: 1;
     display: flex;
+    align-items: center;
+    justify-content: center;
     .embed {
-      flex-basis: 50%;
-    }
-    .live-string {
     }
   }
 }

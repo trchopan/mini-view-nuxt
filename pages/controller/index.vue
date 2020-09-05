@@ -10,35 +10,8 @@
       </div>
       <div class="controller">
         <div class="yt-cover">
-          <img id="yt-cover" :src="ytImgSrc" alt="" />
-        </div>
-        <div class="input-group my-3">
-          <input v-model="inputID" placeholder="Youtube link" />
-          <div class="input-group-append">
-            <button type="button" class="btn-primary" @click="updateYoutubeID">
-              Update
-            </button>
-            <button type="button" @click="youtubeClipboard">Clipboard</button>
-          </div>
-        </div>
-        <div class="input-group my-3">
-          <input v-model="embed" placeholder="Embed code" />
-          <div class="input-group-append">
-            <button type="button" class="btn-primary" @click="updateEmbed">
-              Update
-            </button>
-            <button type="button" @click="embedClipboard">Clipboard</button>
-          </div>
-        </div>
-        <div class="my-3">
-          <button
-            type="button"
-            class="btn-outline-primary mb-3"
-            @click="genSecretToken"
-          >
-            Gen Secret
-          </button>
-          <p v-if="secretToken" class="text-highlight">{{ secretToken }}</p>
+          <span class="play-pause-status">{{ ytStatus }}</span>
+          <img :src="ytImgSrc" alt="" />
         </div>
         <div class="my-3">
           <button
@@ -56,6 +29,36 @@
             Pause
           </button>
         </div>
+        <div class="input-group my-3">
+          <input v-model="inputID" placeholder="Youtube link" />
+          <div class="input-group-append">
+            <button type="button" class="btn-primary" @click="updateYoutubeID">
+              Update
+            </button>
+            <button type="button" @click="youtubeClipboard">Clipboard</button>
+          </div>
+        </div>
+        <template v-if="authUser">
+          <div class="input-group my-3">
+            <input v-model="embed" placeholder="Embed code" />
+            <div class="input-group-append">
+              <button type="button" class="btn-primary" @click="updateEmbed">
+                Update
+              </button>
+              <button type="button" @click="embedClipboard">Clipboard</button>
+            </div>
+          </div>
+          <div class="my-3">
+            <button
+              type="button"
+              class="btn-outline-primary mb-3"
+              @click="genSecretToken"
+            >
+              Gen Secret
+            </button>
+            <p v-if="secretToken" class="text-highlight">{{ secretToken }}</p>
+          </div>
+        </template>
         <div class="my-3">
           <button
             v-for="btn in seeks"
@@ -79,8 +82,15 @@
           </button>
         </div>
         <div class="my-3">
-          <button type="button" @click="setLayout('layout-1')">Layout 1</button>
-          <button type="button" @click="setLayout('layout-2')">Layout 2</button>
+          <button
+            v-for="l in layouts"
+            :key="`layout-${l.value}`"
+            type="button"
+            :class="{'btn-primary': l.value === layout}"
+            @click="setLayout(l.value)"
+          >
+            {{ l.text }}
+          </button>
         </div>
       </div>
       <div class="ios-note text-accent">
@@ -101,6 +111,7 @@ const minute = 60 * second;
 export default Vue.extend({
   data() {
     return {
+      ytStatus: '',
       videoID: '',
       inputID: '',
       embed: '',
@@ -111,6 +122,11 @@ export default Vue.extend({
         {text: '1m', value: 1 * minute},
         {text: '30s', value: 30 * second},
         {text: '10s', value: 10 * second},
+      ],
+      layout: '',
+      layouts: [
+        {text: 'Layout 1', value: 'layout-1'},
+        {text: 'Layout 2', value: 'layout-2'},
       ],
     };
   },
@@ -126,11 +142,14 @@ export default Vue.extend({
   mounted() {
     this.videoIDRef = this.makeDbRef('youtube/videoID');
     this.ytCommandRef = this.makeDbRef('youtube/command');
+    this.ytStatusRef = this.makeDbRef('youtube/status');
     this.layoutRef = this.makeDbRef('layout');
     this.embedRef = this.makeDbRef('embed');
     this.secretRef = this.makeDbRef('secret');
 
     this.videoIDRef.on('value', this.handleVideoID);
+    this.ytStatusRef.on('value', this.handleYTStatus);
+    this.layoutRef.on('value', this.handleLayout);
   },
   beforeDestroy() {
     this.videoIDRef.off('value', this.handleVideoID);
@@ -149,6 +168,12 @@ export default Vue.extend({
     },
     handleVideoID(snapshot) {
       this.videoID = snapshot.val();
+    },
+    handleYTStatus(snapshot) {
+      this.ytStatus = snapshot.val();
+    },
+    handleLayout(snapshot) {
+      this.layout = snapshot.val();
     },
     updateYoutubeID() {
       this.videoID = this.getYoutubeID(this.inputID);
@@ -224,8 +249,16 @@ export default Vue.extend({
   .controller {
     padding: 1rem;
     .yt-cover {
+      position: relative;
       max-width: 300px;
       margin: auto;
+      .play-pause-status {
+        position: absolute;
+        top: 0.5rem;
+        left: 0.5rem;
+        color: white;
+        font-size: 0.8rem;
+      }
       img {
         width: 100%;
       }

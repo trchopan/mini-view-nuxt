@@ -7,6 +7,8 @@
       fit-parent
       :player-vars="playerVars"
       :video-id="videoID"
+      @playing="setYTStatus('playing')"
+      @paused="setYTStatus('pause')"
     ></youtube>
     <div class="yt-time">{{ ytTime }}</div>
   </div>
@@ -35,6 +37,7 @@ export default Vue.extend({
   mounted() {
     this.videoIDRef = this.makeDbRef('youtube/videoID');
     this.ytCommandRef = this.makeDbRef('youtube/command');
+    this.ytStatusRef = this.makeDbRef('youtube/status');
 
     this.videoIDRef.on('value', this.handleVideoID);
     this.ytCommandRef.on('value', this.handleYTCommand);
@@ -47,6 +50,9 @@ export default Vue.extend({
     makeDbRef(refStr) {
       const uid = (this.authUser && this.authUser.uid) || 'test';
       return this.$fireDb.ref(`${uid}/${refStr}`);
+    },
+    setYTStatus(status) {
+      this.ytStatusRef.set(status);
     },
     async handleYTCommand(snapshot) {
       const command = snapshot.val();
