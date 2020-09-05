@@ -22,11 +22,83 @@ a {
   color: inherit;
 }
 
+@each $i in $colors {
+  .text-#{nth($i, 1)} {
+    color: nth($i, 2);
+  }
+  .bg-#{nth($i, 1)} {
+    background-color: nth($i, 2);
+  }
+}
+
+.text-underline {
+  text-decoration: underline;
+}
+
+$spacings: (
+  '1': 0.25rem,
+  '2': 0.5rem,
+  '3': 0.75rem,
+  '4': 1rem,
+  '5': 1.5rem,
+);
+
+@each $i in $spacings {
+  .ma-#{nth($i, 1)} {
+    margin: nth($i, 2);
+  }
+  .mx-#{nth($i, 1)} {
+    margin-left: nth($i, 2);
+    margin-right: nth($i, 2);
+  }
+  .my-#{nth($i, 1)} {
+    margin-top: nth($i, 2);
+    margin-bottom: nth($i, 2);
+  }
+  .mt-#{nth($i, 1)} {
+    margin-top: nth($i, 2);
+  }
+  .mr-#{nth($i, 1)} {
+    margin-right: nth($i, 2);
+  }
+  .mb-#{nth($i, 1)} {
+    margin-bottom: nth($i, 2);
+  }
+  .ml-#{nth($i, 1)} {
+    margin-left: nth($i, 2);
+  }
+
+  .pa-#{nth($i, 1)} {
+    padding: nth($i, 2);
+  }
+  .px-#{nth($i, 1)} {
+    padding-left: nth($i, 2);
+    padding-right: nth($i, 2);
+  }
+  .py-#{nth($i, 1)} {
+    padding-top: nth($i, 2);
+    padding-bottom: nth($i, 2);
+  }
+  .pt-#{nth($i, 1)} {
+    padding-top: nth($i, 2);
+  }
+  .pr-#{nth($i, 1)} {
+    padding-right: nth($i, 2);
+  }
+  .pb-#{nth($i, 1)} {
+    padding-bottom: nth($i, 2);
+  }
+  .pl-#{nth($i, 1)} {
+    padding-left: nth($i, 2);
+  }
+}
+
 button {
-  border: solid 1px map-get($colors, 'text');
   border-radius: 2px;
-  background: map-get($colors, 'secondary');
   padding: 0.5rem;
+  color: black;
+  background: map-get($colors, 'text');
+  border: solid 1px map-get($colors, 'accent');
   &.btn-primary {
     color: map-get($colors, 'text');
     background: map-get($colors, 'primary');
@@ -34,7 +106,7 @@ button {
   }
   &.btn-secondary {
     color: map-get($colors, 'primary');
-    background: map-get($colors, 'secondary');
+    background: map-get($colors, 'text');
     border: solid 1px map-get($colors, 'primary');
   }
   &.btn-accent {
@@ -59,12 +131,15 @@ h6 {
 }
 
 .custom-style {
-  .cpu-mem-container {
+  .stats-container {
     display: flex;
-    flex-wrap: wrap;
-    width: 12rem;
-    .cell {
-      flex-basis: 25%;
+    flex-direction: column;
+    width: 100%;
+    .system-stats {
+      display: flex;
+      .cell {
+        width: 3.5rem;
+      }
     }
   }
 }

@@ -11,7 +11,10 @@
     "lint": "yarn lint:js"
   },
   "dependencies": {
+    "@fullcalendar/daygrid": "^5.3.1",
+    "@fullcalendar/vue": "^5.3.1",
     "@nuxtjs/firebase": "^6.1.1",
+    "calendar-month-array": "^2.1.1",
     "firebase": "^7.19.1",
     "normalize.css": "^8.0.1",
     "nuxt": "^2.14.0",

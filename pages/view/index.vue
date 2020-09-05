@@ -19,7 +19,12 @@
         </div>
       </div>
       <div v-if="authUser" class="view-2">
-        <CustomEmbed class="embed" />
+        <div class="embed">
+          <CustomEmbed />
+        </div>
+        <div class="calendar">
+          <Calendar />
+        </div>
       </div>
     </div>
   </client-only>
@@ -103,9 +108,8 @@ export default Vue.extend({
     &.layout-1 {
       flex: 1;
       display: flex;
-      width: 100vw;
       @media (max-width: $breakpoint-sm) {
-        flex-wrap: wrap;
+        flex-direction: column;
       }
       .youtube-player,
       .clock {
@@ -115,10 +119,6 @@ export default Vue.extend({
         align-items: center;
         justify-content: center;
         text-align: center;
-        @media (max-width: $breakpoint-sm) {
-          flex-basis: 100%;
-          margin: auto;
-        }
       }
     }
     &.layout-2 {
@@ -135,9 +135,16 @@ export default Vue.extend({
   .view-2 {
     flex: 1;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    .embed {
+    @media (max-width: $breakpoint-sm) {
+      flex-direction: column;
+    }
+    .embed,
+    .calendar {
+      display: flex;
+      flex-basis: 100%;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
     }
   }
 }

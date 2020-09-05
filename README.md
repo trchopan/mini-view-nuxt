@@ -3,7 +3,7 @@
 I have a spare iPad mini so I decided to build a View - Controller system that
 I can play youtube video, show a clock, embed some string like cpu status, etc.
 
-So [Mini View](https://mini-view.web.app) is born.
+So [Mini View](https://mini-view.web.app) was born.
 
 Enjoy!
 
