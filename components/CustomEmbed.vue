@@ -37,12 +37,4 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss">
-.custom-style ::v-deep {
-  .calendar-container {
-    .header {
-      display: none;
-    }
-  }
-}
-</style>
+<style lang="scss" scoped></style>

@@ -47,7 +47,7 @@ button {
     background: map-get($colors, 'hightlight');
     border: solid 1px map-get($colors, 'text');
   }
-  &.btn-outline-primary{
+  &.btn-outline-primary {
     color: map-get($colors, 'text');
     background: none;
     border: solid 2px map-get($colors, 'primary');
@@ -56,4 +56,15 @@ button {
 
 h6 {
   font-size: 0.67rem;
+}
+
+.custom-style {
+  .cpu-mem-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 12rem;
+    .cell {
+      flex-basis: 25%;
+    }
+  }
 }
