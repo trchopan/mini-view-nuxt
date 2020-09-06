@@ -1,9 +1,7 @@
 <template>
-  <div>
+  <div class="youtube-container">
     <youtube
       ref="youtube"
-      resize
-      :resize-delay="500"
       fit-parent
       :player-vars="playerVars"
       :video-id="videoID"
@@ -86,3 +84,12 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.youtube-container {
+  overflow: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+</style>

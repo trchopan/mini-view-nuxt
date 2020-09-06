@@ -75,7 +75,7 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .container {
   max-width: 500px;
   padding: 0.5rem;

@@ -88,8 +88,13 @@ export default Vue.extend({
 .container {
   max-width: none;
   height: 100vh;
+  width: 100vw;
   display: flex;
   flex-direction: column;
+  overflow: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
   .back-arrow {
     position: absolute;
     top: 0rem;
@@ -129,6 +134,7 @@ export default Vue.extend({
         left: 0;
         bottom: 0;
         background: black;
+        z-index: 999;
       }
     }
   }
