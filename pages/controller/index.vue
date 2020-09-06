@@ -11,6 +11,9 @@
       <div class="controller">
         <div class="yt-cover">
           <span class="play-pause-status">{{ ytStatus }}</span>
+          <span class="volume">
+            Vol {{ ytVolume !== null && ytVolume.toString() }}
+          </span>
           <img :src="ytImgSrc" alt="" />
         </div>
         <div class="my-3">
@@ -83,6 +86,22 @@
         </div>
         <div class="my-3">
           <button
+            type="button"
+            class="btn-accent"
+            @click="sendSimpleCmd('volume-down')"
+          >
+            Vol DOWN
+          </button>
+          <button
+            type="button"
+            class="btn-hightlight"
+            @click="sendSimpleCmd('volume-up')"
+          >
+            Vol UP
+          </button>
+        </div>
+        <div class="my-3">
+          <button
             v-for="l in layouts"
             :key="`layout-${l.value}`"
             type="button"
@@ -93,9 +112,13 @@
           </button>
         </div>
       </div>
-      <div class="ios-note text-accent">
-        iOS user may need to play the View first. This is because iOS block
+      <div class="ios-note text-accent mb-3">
+        On iOS user may need to play the View first. This is because iOS block
         content auto-play to protect users from abusive ads.
+      </div>
+      <div class="ios-note text-accent mb-3">
+        On iOS devices, the audio level is always under the user’s physical
+        control. The volume property is not settable.
       </div>
     </div>
   </client-only>
@@ -112,6 +135,7 @@ export default Vue.extend({
   data() {
     return {
       ytStatus: '',
+      ytVolume: '',
       videoID: '',
       inputID: '',
       embed: '',
@@ -143,16 +167,19 @@ export default Vue.extend({
     this.videoIDRef = this.makeDbRef('youtube/videoID');
     this.ytCommandRef = this.makeDbRef('youtube/command');
     this.ytStatusRef = this.makeDbRef('youtube/status');
+    this.ytVolmeRef = this.makeDbRef('youtube/volume');
     this.layoutRef = this.makeDbRef('layout');
     this.embedRef = this.makeDbRef('embed');
     this.secretRef = this.makeDbRef('secret');
 
     this.videoIDRef.on('value', this.handleVideoID);
     this.ytStatusRef.on('value', this.handleYTStatus);
+    this.ytVolmeRef.on('value', this.handleYTVolume);
     this.layoutRef.on('value', this.handleLayout);
   },
   beforeDestroy() {
     this.videoIDRef.off('value', this.handleVideoID);
+    this.ytVolmeRef.off('value', this.handleYTVolume);
   },
   methods: {
     makeDbRef(refStr) {
@@ -171,6 +198,9 @@ export default Vue.extend({
     },
     handleYTStatus(snapshot) {
       this.ytStatus = snapshot.val();
+    },
+    handleYTVolume(snapshot) {
+      this.ytVolume = snapshot.val();
     },
     handleLayout(snapshot) {
       this.layout = snapshot.val();
@@ -256,6 +286,13 @@ export default Vue.extend({
         position: absolute;
         top: 0.5rem;
         left: 0.5rem;
+        color: white;
+        font-size: 0.8rem;
+      }
+      .volume {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
         color: white;
         font-size: 0.8rem;
       }
