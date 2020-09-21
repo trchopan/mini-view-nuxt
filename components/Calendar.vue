@@ -14,12 +14,12 @@
       <table>
         <thead>
           <tr>
+            <td>S</td>
             <td>M</td>
             <td>T</td>
             <td>W</td>
             <td>T</td>
             <td>F</td>
-            <td>S</td>
             <td>S</td>
           </tr>
         </thead>
