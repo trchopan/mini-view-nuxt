@@ -149,8 +149,8 @@ export default Vue.extend({
       ],
       layout: '',
       layouts: [
-        {text: 'Layout 1', value: 'layout-1'},
-        {text: 'Layout 2', value: 'layout-2'},
+        {text: 'Blocks', value: 'layout-1'},
+        {text: 'Fullscreen', value: 'layout-2'},
       ],
     };
   },

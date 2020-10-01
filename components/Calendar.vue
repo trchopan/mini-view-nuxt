@@ -48,6 +48,7 @@ export default Vue.extend({
     return {
       month: null,
       year: null,
+      intervalID: null,
     };
   },
   computed: {
@@ -60,7 +61,12 @@ export default Vue.extend({
     },
   },
   created() {
-    this.reset();
+    this.intervalID = setInterval(() => {
+      this.reset();
+    }, 60 * 1000);
+  },
+  beforeDestroy() {
+    clearInterval(this.intervalID);
   },
   methods: {
     reset() {

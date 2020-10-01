@@ -13,11 +13,12 @@ export default Vue.extend({
     return {
       dateStr: '',
       timeStr: '',
+      intervalID: null,
     };
   },
   computed: {},
-  mounted() {
-    setInterval(() => {
+  created() {
+    this.intervalID = setInterval(() => {
       const now = new Date();
       const date = this.addZero(now.getDate());
       const month = this.addZero(now.getMonth() + 1);
@@ -28,6 +29,9 @@ export default Vue.extend({
       this.dateStr = `${date}-${month}-${year}`;
       this.timeStr = `${hour}:${minute}:${second}`;
     }, 1000);
+  },
+  beforeDestroy() {
+    clearInterval(this.intervalID);
   },
   methods: {
     addZero(x) {
