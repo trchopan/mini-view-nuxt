@@ -51,6 +51,14 @@
               <button type="button" @click="embedClipboard">Clipboard</button>
             </div>
           </div>
+          <div class="input-group my-3">
+            <input v-model="clip" placeholder="Clip text" />
+            <div class="input-group-append">
+              <button type="button" class="btn-primary" @click="updateClip">
+                Update
+              </button>
+            </div>
+          </div>
           <div class="my-3">
             <button
               type="button"
@@ -139,6 +147,7 @@ export default Vue.extend({
       videoID: '',
       inputID: '',
       embed: '',
+      clip: '',
       secretToken: '',
       seeks: [
         {text: '10m', value: 10 * minute},
@@ -171,15 +180,20 @@ export default Vue.extend({
     this.layoutRef = this.makeDbRef('layout');
     this.embedRef = this.makeDbRef('embed');
     this.secretRef = this.makeDbRef('secret');
+    this.clipRef = this.makeDbRef('clip');
 
     this.videoIDRef.on('value', this.handleVideoID);
     this.ytStatusRef.on('value', this.handleYTStatus);
     this.ytVolmeRef.on('value', this.handleYTVolume);
     this.layoutRef.on('value', this.handleLayout);
+    this.clipRef.on('value', this.handleClip);
   },
   beforeDestroy() {
     this.videoIDRef.off('value', this.handleVideoID);
+    this.ytStatusRef.off('value', this.handleYTStatus);
     this.ytVolmeRef.off('value', this.handleYTVolume);
+    this.layoutRef.off('value', this.handleLayout);
+    this.clipRef.off('value', this.handleClip);
   },
   methods: {
     makeDbRef(refStr) {
@@ -204,6 +218,9 @@ export default Vue.extend({
     },
     handleLayout(snapshot) {
       this.layout = snapshot.val();
+    },
+    handleClip(snapshot) {
+      this.clip = snapshot.val();
     },
     updateYoutubeID() {
       this.videoID = this.getYoutubeID(this.inputID);
@@ -231,6 +248,9 @@ export default Vue.extend({
       } catch (err) {
         alert('Please allow access to clipboard');
       }
+    },
+    updateClip() {
+      this.clipRef.set(this.clip);
     },
     sendSimpleCmd(cmd) {
       this.ytCommandRef.set(cmd);

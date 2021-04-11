@@ -1,4 +1,4 @@
-import firebaseConf from './firebase-conf.js';
+import firebaseConf from './firebase-config.js';
 import {title, meta, link, script} from './headers.js';
 
 export default {
